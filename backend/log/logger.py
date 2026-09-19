@@ -3,9 +3,10 @@ from time import time, perf_counter
 from typing import Any, Dict, Optional
 from pathlib import Path
 from sys import exit
+from backend.app.config import WORKSPACE
 
 class Logger:
-    def __init__(self, log_file: str = "backend/log/log.txt"):
+    def __init__(self, log_file: str = f"{WORKSPACE}/backend/log/log.txt"):
         self.log_path = Path(log_file)
         
         self.log_path.parent.mkdir(parents=True, exist_ok=True)

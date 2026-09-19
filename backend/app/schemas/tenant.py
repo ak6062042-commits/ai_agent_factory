@@ -1,0 +1,31 @@
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional
+from email_validator import validate_email, EmailNotValidError
+from backend.log.logger import Logger
+
+
+# Not needed here but still wannna keep it (Looks good)
+def isValidEmail(email: str) -> bool:
+    try:
+        email_info = validate_email(email, check_deliverability=True)
+        normalized = email_info.email
+        print(f"email validated* {normalized}")
+        return True
+    
+    except EmailNotValidError as e:
+        logger = Logger()
+        logger.log(e, "ERROR")
+        return False
+
+class TenantRequest(BaseModel):
+    organization_name: str = Field(..., min_length=1, description="Tenant's organization name:")
+    admin_email: EmailStr = Field(..., min_length=1, description="Tenant admin mail:")
+
+class TenantRespone(BaseModel):
+    tenant_id: str
+    organization_name: str
+    admin_email: str
+    api_key: str
+
+class TenantHealth(BaseModel):
+    status: str
