@@ -1,19 +1,27 @@
 import datetime
 from time import time, perf_counter
 from typing import Any, Dict, Optional
+from pathlib import Path
+from os import mkdir
 
 class Logger:
     def __init__(self, log_file: str = "backend/log/log.txt"):
-        self.log_file = log_file
+        self.log_path = Path(log_file)
+        
+        self.log_path.parent.mkdir(parents=True, exist_ok=True)
+        self.log_path.touch(exist_ok=True)
+        print(f"Under touch {self.log_path}")
+        
         self.LEVEL = ["INFO", "ERROR", "DEBUG"]
         self.start = 0
         self.end = 0
 
     def log(self, message: str, level: str = "INFO"):
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        with open(self.log_file, "a") as f:
+        with open(file=self.log_path, mode='a', encoding='utf-8') as f:
             f.write(f"[{timestamp}], {level}: {message}.\n")
-    
+
+    # -------------------- Still in works --------------------
     def start_counter(self):
         self.start = perf_counter()
     
