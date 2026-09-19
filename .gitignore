@@ -1,0 +1,58 @@
+# ==============================
+# Environment / Secrets
+# ==============================
+.env
+.env.*
+!.env.example
+
+# ==============================
+# Python
+# ==============================
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# ==============================
+# Testing / Coverage
+# ==============================
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==============================
+# IDE / Editors
+# ==============================
+.vscode/
+.idea/
+
+# ==============================
+# Local application data
+# ==============================
+data/uploads/
+data/chroma/
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+
+# ==============================
+# Logs
+# ==============================
+*.log
+backend/log/log.txt
+
+# ==============================
+# OS generated files
+# ==============================
+.DS_Store
+Thumbs.db
+
+# ==============================
+# Temporary files
+# ==============================
+*.tmp
+*.temp
