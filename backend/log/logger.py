@@ -2,7 +2,7 @@ import datetime
 from time import time, perf_counter
 from typing import Any, Dict, Optional
 from pathlib import Path
-from os import mkdir
+from sys import exit
 
 class Logger:
     def __init__(self, log_file: str = "backend/log/log.txt"):
@@ -17,9 +17,18 @@ class Logger:
         self.end = 0
 
     def log(self, message: str, level: str = "INFO"):
+        if not level in self.LEVEL:
+            print("Incorrect logging level!")
+            exit(1)
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         with open(file=self.log_path, mode='a', encoding='utf-8') as f:
             f.write(f"[{timestamp}], {level}: {message}.\n")
+    
+    def read_log(self, level: str = "INFO"):
+        with open(file = self.log_path, mode = 'r', encoding = 'utf-8') as f:
+            for log in f:
+                if level in log:
+                    print(log)
 
     # -------------------- Still in works --------------------
     def start_counter(self):
