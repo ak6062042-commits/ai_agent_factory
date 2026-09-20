@@ -4,7 +4,7 @@ from email_validator import validate_email, EmailNotValidError
 from backend.log.logger import Logger
 
 
-# Not needed here but still wannna keep it (Looks good)
+# NOTE: Not needed here but still wannna keep it (Looks good)
 def isValidEmail(email: str) -> bool:
     try:
         email_info = validate_email(email, check_deliverability=True)

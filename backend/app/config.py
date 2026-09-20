@@ -14,3 +14,4 @@ MODEL_VERSION = "gpt-4o-mini"
 load_dotenv(ENV_PATH)
 OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 EXA_API_KEY = getenv("EXA_API_KEY")
+DATABASE_URL = getenv("DATABASE_URL")
