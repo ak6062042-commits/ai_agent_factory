@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AnyHttpUrl
 from typing import Optional
 
 class ChatRequest(BaseModel):
@@ -9,7 +9,7 @@ class Source(BaseModel):
     pdfTitle: str
     page: Optional[int] = None
     websiteTitle: Optional[str] = None
-    url: str
+    url: AnyHttpUrl
     
 
 class ChatResposne(BaseModel):
