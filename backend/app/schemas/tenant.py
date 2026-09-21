@@ -1,5 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr
-from typing import Optional
+from pydantic import BaseModel, Field, EmailStr, ConfigDict
 from email_validator import validate_email, EmailNotValidError
 from backend.log.logger import Logger
 
@@ -18,14 +17,14 @@ def isValidEmail(email: str) -> bool:
         return False
 
 class TenantRequest(BaseModel):
-    organization_name: str = Field(..., min_length=1, description="Tenant's organization name:")
-    admin_email: EmailStr = Field(..., min_length=1, description="Tenant admin mail:")
+    
+    model_config = ConfigDict(str_strip_whitespace=True)
+    
+    organization_name: str = Field(..., min_length=1, max_length = 50, description="Tenant's organization name")
+    admin_email: EmailStr = Field(..., description="Tenant admin mail")
 
-class TenantRespone(BaseModel):
+class TenantResposne(BaseModel):
     tenant_id: str
     organization_name: str
     admin_email: str
     api_key: str
-
-class TenantHealth(BaseModel):
-    status: str

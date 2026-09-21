@@ -1,20 +1,24 @@
-from pydantic import BaseModel, Field, AnyHttpUrl
+from pydantic import BaseModel, Field, AnyHttpUrl, ConfigDict
 from typing import Optional
 
-class ChatRequest(BaseModel):
-    message: str = Field(..., min_length = 1, description = "User/Tenant's message/Prompt")
-    session_id: str = Field(..., min_length = 1, description = "Unique id for the chat session")
+from backend.app.core.enums import SourceType
 
-class Source(BaseModel):
-    pdfTitle: str
-    page: Optional[int] = None
-    websiteTitle: Optional[str] = None
-    url: AnyHttpUrl
+class ChatRequest(BaseModel):
+    
+    model_config = ConfigDict(str_strip_whitespace = True)
+    message: str = Field(..., min_length = 1, max_length = 10000, description = "User/Tenant's message/Prompt")
+    session_id: str = Field(..., min_length = 1, description = "Unique id for the chat session")
     
 
-class ChatResposne(BaseModel):
-    answer: str
-    source: list[Source] = Field(default_factory = list)
+class Citation(BaseModel):
+    source_type: SourceType
+    title: str
+    page: Optional[int] = None
+    url: Optional[AnyHttpUrl] = None
 
-class Health(BaseModel):
-    status: str
+# the chat response can be from any of the cited meaning the response can be from the provide doc or from the website 
+    
+
+class ChatResponse(BaseModel):
+    answer: str
+    sources: list[Citation] = Field(default_factory = list)

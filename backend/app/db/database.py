@@ -1,41 +1,48 @@
 from contextlib import contextmanager
-from sqlalchemy import create_engine
-from sqlalchemy import exc as core_exc
-from sqlalchemy.orm import sessionmaker, DeclarativeMeta
-from backend.app.config import DATABASE_URL # sqlite:///./backend/data/app.db
+from sqlalchemy import create_engine, event
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from backend.app.config import DATABASE_URL
 from backend.log.logger import Logger
 
-DB_URL = DATABASE_URL
-engine = create_engine(DB_URL, ...) #kwargs not decided yet
-SessionLocal = sessionmaker(bind = engine, autoflush=False, autocommit=False)
 logger = Logger()
 
-def init_db(Base: DeclarativeMeta): # Base will be defined in the model.py, right now just a place holder here // TODO: Fill the kwargs after model.py
-    Base.metadata.create_all(bind = engine)
+
+class Base(DeclarativeBase):
+    pass
+
+
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+
+
+@event.listens_for(engine, "connect")
+def _enable_foreign_keys(dbapi_conn, _record):
+    cur = dbapi_conn.cursor()
+    cur.execute("PRAGMA foreign_keys=ON")
+    cur.close()
+
+
+SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
+
+
+def init_db():
+    from backend.app.db import models
+    Base.metadata.create_all(bind=engine)
+
 
 @contextmanager
 def get_session():
     session = SessionLocal()
-    
     try:
         yield session
         session.commit()
-        
-    except core_exc.PendingRollbackError as e:
-        logger.log(f"Pending rollback detected: {e}", "ERROR")
-        session.rollback()
-        raise
-    
-    except core_exc.SQLAlchemyError as e:
-        logger.log(f"Exception in the SQL database deteceted {e}", "ERROR")
-        session.rollback()
-        raise
-        
     except Exception as e:
-        logger.log(f"unexpected Error occured {e}", "ERROR")
+        logger.log(f"DB error, rolling back: {e}", "ERROR")
         session.rollback()
         raise
-    
     finally:
         session.close()
-         
+
+
+def get_db():
+    with get_session() as session:
+        yield session
