@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field, EmailStr, ConfigDict
 from email_validator import validate_email, EmailNotValidError
 from backend.log.logger import Logger
+from datetime import datetime
+from typing import Optional
 
 
 # NOTE: Not needed here but still wannna keep it (Looks good)
@@ -26,5 +28,7 @@ class TenantRequest(BaseModel):
 class TenantResposne(BaseModel):
     tenant_id: str
     organization_name: str
-    admin_email: str
+    admin_email: EmailStr
     api_key: str
+    created_at: Optional[datetime] = None # TODO: Recheck it later
+     
