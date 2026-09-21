@@ -1,16 +1,10 @@
 from contextlib import contextmanager
 from sqlalchemy import create_engine, event
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.orm import sessionmaker
 from backend.app.config import DATABASE_URL
 from backend.log.logger import Logger
 
 logger = Logger()
-
-
-class Base(DeclarativeBase):
-    pass
-
-
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
 
@@ -26,7 +20,7 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False
 
 def init_db():
     from backend.app.db import models
-    Base.metadata.create_all(bind=engine)
+    models.Base.metadata.create_all(bind=engine)
 
 
 @contextmanager

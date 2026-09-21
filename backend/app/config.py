@@ -9,6 +9,9 @@ WORKSPACE = BACKEND_DIR.parent
 ENV_PATH = WORKSPACE / ".env"
 
 if not Path(BACKEND_DIR / "data").exists():
+    from backend.log.logger import Logger
+    logger = Logger()
+    logger.log(f"Creating a data directory at path: {Path(BACKEND_DIR / "data")}")
     Path(BACKEND_DIR / "data").mkdir(parents = True, exist_ok = True)
     
 

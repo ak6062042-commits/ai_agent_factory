@@ -1,23 +1,21 @@
-from typing import List, Optional
-from sqlalchemy import ForeignKey, Text, String, Boolean, DateTime, Column
+from typing import List
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from pydantic import EmailStr
+import uuid
 
-# TODO: REDESIGN EVERYTHING LATER
-
+# NOTE: Base defined here because was removed from database.py and model.Base.metadata.create_all() was used in init_db
 class Base(DeclarativeBase):
     pass
     
 
 class Tenant(Base):
-    __tabelname__ = "Tenanat"
-    id = Column(String, primary_key = True, autoincrement = True, nullable = False)
-    organization_name = Column(String, autoincrement = True)
-    admin_email = Column(String, primary_key = True, autoincrement = True)
-    hashed_api_key =Column(String, primary_key = True, autoincrement = True)
+    __tablename__ = "tenants"
+    id: Mapped[str] = mapped_column(primary_key = True, default = lambda: str(uuid.uuid4())) #deafult = uuid.uuid4
+    organization_name: Mapped[str] = mapped_column() # TODO = Email casing: the unique constraint treats A@x.com and a@x.com as different. Lowercase the email in the tenant service
+    admin_email: Mapped[str] = mapped_column(unique = True)
+    hashed_api_key: Mapped[str] = mapped_column(unique = True)
     
-    agents: Mapped[List["Agent"]] = relationship(back_populates = "Tenant", cascade = "all, delete-orphan")
+    #agents: Mapped[List["Agent"]] = relationship(back_populates = "tenants", cascade = "all, delete-orphan")
 
-class Agent:
-    __tabelname = "Agent"
-    pass
+# class Agent(Base):
+#     __tablename__ = "agents"
+    
