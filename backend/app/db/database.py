@@ -6,6 +6,7 @@ from backend.log.logger import Logger
 
 logger = Logger()
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+logger.log(f"app.db created at {DATABASE_URL}", "INFO")
 
 
 @event.listens_for(engine, "connect")

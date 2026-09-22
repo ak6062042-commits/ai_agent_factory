@@ -8,4 +8,8 @@ class IngestionStatus(str, Enum):
 class SourceType(str, Enum):
     DOCUMENT = "document"
     WEBSITE = "website"
+
+class Roles(str, Enum):
+    USER = "user"
+    ASSISTANT = "assistant"
     

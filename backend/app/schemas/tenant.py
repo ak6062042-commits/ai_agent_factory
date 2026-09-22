@@ -29,6 +29,6 @@ class TenantResposne(BaseModel):
     tenant_id: str
     organization_name: str
     admin_email: EmailStr
-    api_key: str
+    hashed_api_key: str
     created_at: Optional[datetime] = None # TODO: Recheck it later
      
