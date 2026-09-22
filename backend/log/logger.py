@@ -13,7 +13,7 @@ class Logger:
         self.log_path.touch(exist_ok=True)
         print(f"Under touch {self.log_path}")
         
-        self.LEVEL = ["INFO", "ERROR", "DEBUG"]
+        self.LEVEL = ["INFO", "ERROR", "DEBUG", "WARNING"]
         self.start = 0
         self.end = 0
 
