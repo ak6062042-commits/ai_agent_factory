@@ -33,11 +33,11 @@ htmlcov/
 # ==============================
 # Local application data
 # ==============================
-data/uploads/
-data/chroma/
-data/*.db
-data/*.sqlite
-data/*.sqlite3
+backend/data/uploads/
+backend/data/chroma/
+backend/data/*.db
+backend/data/*.sqlite
+backend/data/*.sqlite3
 
 # ==============================
 # Logs
