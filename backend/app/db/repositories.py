@@ -38,8 +38,16 @@ def get_agents_for_tenant(db: Session, tenant_id: str) -> list[Agent]:
     return db.query(Agent).filter(Agent.tenant_id == tenant_id).all()
 
 
-def create_source(db: Session, tenant_id: str, agent_id: str,source_type: SourceType, title: str, url: Optional[str]) -> Source:
-    source = Source(tenant_id=tenant_id, agent_id=agent_id, source_type=source_type, title=title, url=url)
+# LAST MINUTE CHANGE
+def create_source(
+    db: Session, tenant_id: str, agent_id: str,
+    source_type: SourceType, title: str, url: Optional[str] = None,
+    file_path: Optional[str] = None,
+) -> Source:
+    source = Source(
+        tenant_id=tenant_id, agent_id=agent_id,
+        source_type=source_type, title=title, url=url, file_path=file_path,
+    )
     db.add(source)
     db.flush()
     return source

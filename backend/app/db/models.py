@@ -70,6 +70,7 @@ class Source(Base):
     url: Mapped[Optional[str]] = mapped_column(String, nullable = True)
     status: Mapped[IngestionStatus] = mapped_column(Enum(IngestionStatus), default = IngestionStatus.PROCESSING)
     error: Mapped[Optional[str]] = mapped_column(Text, nullable = True)
+    file_path: Mapped[Optional[str]] = mapped_column(String, nulable = True)
 
     tenant_id: Mapped[str] = mapped_column(ForeignKey("tenants.tenant_id", ondelete = "CASCADE"), index = True)
     agent_id: Mapped[str] = mapped_column(ForeignKey("agents.agent_id", ondelete = "CASCADE"), index = True)

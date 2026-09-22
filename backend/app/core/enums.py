@@ -12,4 +12,3 @@ class SourceType(str, Enum):
 class Roles(str, Enum):
     USER = "user"
     ASSISTANT = "assistant"
-    
