@@ -25,7 +25,9 @@ MAX_SIMILAR_URLS = 5
 load_dotenv(ENV_PATH)
 OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 EXA_API_KEY = getenv("EXA_API_KEY")
-DATABASE_URL = getenv("DATABASE_URL")
+#DATABASE_URL = getenv("DATABASE_URL", f"sqlite:///{DATA_DIR / 'app.db'}")
+DATABASE_URL = f"sqlite:///{DATA_DIR / 'app.db'}"
+print(DATABASE_URL)
 MASTER_KEY = getenv("MASTER_KEY")
 
 MAX_UPLOADS = 5
