@@ -19,3 +19,27 @@ def get_tenant_by_id(db: Session, tenant_id) -> Optional[Tenant]:
     return db.query(Tenant).filter(Tenant.tenant_id == tenant_id).first()
 
 
+def create_agent(db: Session, tenant_id: str, agent_name: str, website_url: str) -> Agent:
+    agent = Agent(tenant_id=tenant_id, agent_name=agent_name, website_url=website_url)
+    db.add(agent)
+    db.flush()
+    return agent
+
+
+def get_agent_by_id(db: Session, tenant_id: str, agent_id: str) -> Optional[Agent]:
+    return (db.query(Agent).filter(Agent.tenant_id == tenant_id, Agent.agent_id == agent_id).first())
+
+
+def get_agent_by_id_unscoped(db: Session, agent_id: str) -> Optional[Agent]:
+    return db.query(Agent).filter(Agent.agent_id == agent_id).first()
+
+
+def get_agents_for_tenant(db: Session, tenant_id: str) -> list[Agent]:
+    return db.query(Agent).filter(Agent.tenant_id == tenant_id).all()
+
+
+def create_source(db: Session, tenant_id: str, agent_id: str,source_type: SourceType, title: str, url: Optional[str]) -> Source:
+    source = Source(tenant_id=tenant_id, agent_id=agent_id, source_type=source_type, title=title, url=url)
+    db.add(source)
+    db.flush()
+    return source

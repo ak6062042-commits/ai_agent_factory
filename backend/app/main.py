@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from backend.app.api import tenants
+from backend.app.api import tenants, agents
 from backend.app.db.database import init_db
 from backend.app.core.security import get_current_tenant
 from backend.app.db.models import Tenant
@@ -23,6 +23,7 @@ app = FastAPI(title="AI AGENT FACTORY", description=description, version="0.1", 
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_credentials=False, allow_methods=['*'], allow_headers=['*'])
 
 app.include_router(tenants.router)
+app.include_router(agents.router)
 
 # @app.get ("/whoami")
 # def whoami(tenant: Tenant = Depends(get_current_tenant)):
