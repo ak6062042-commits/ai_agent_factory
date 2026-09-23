@@ -66,7 +66,7 @@ if __name__ =="__main__":
     # client_company = "Acme Corp"
 
     new_api_key = generate_api_key()
-    print(f"🔑 Generated API Key:\n{new_api_key}\n")
+    print(f"Generated API Key:\n{new_api_key}\n")
     
     hashed_api_key = hash_api_key(new_api_key)
-    print(f"🔑 Hashed API Key:\n{hashed_api_key}\n")
+    print(f" Hashed API Key:\n{hashed_api_key}\n")

@@ -14,14 +14,7 @@ router = APIRouter(prefix="/agents", tags=["agents"])
 
 
 @router.post("", response_model=AgentResponse, status_code=201)
-def create_agent(
-    background_tasks: BackgroundTasks,
-    agent_name: str = Form(...),
-    website_url: str = Form(...),
-    documents: List[UploadFile] = File(...),
-    db: Session = Depends(get_db),
-    tenant: Tenant = Depends(get_current_tenant),
-):
+def create_agent(background_tasks: BackgroundTasks, agent_name: str = Form(...), website_url: str = Form(...), documents: List[UploadFile] = File(...), db: Session = Depends(get_db), tenant: Tenant = Depends(get_current_tenant),):
     if len(documents) > MAX_UPLOADS:
         raise HTTPException(status_code=400, detail=f"Too many files: max {MAX_UPLOADS}, got {len(documents)}")
     return agent_services.create_agent(db, tenant, agent_name, website_url, documents, background_tasks)
@@ -38,3 +31,9 @@ def get_agent(agent_id: str, db: Session = Depends(get_db), tenant: Tenant = Dep
     if agent is None:
         raise HTTPException(status_code=404, detail="Agent not found")
     return agent
+
+@router.delete("/{agent_id}", status_code = 204)
+def delete_agent(agent_id: str, tenant = Depends(get_current_tenant), db = Depends(get_db)):
+    deleted = agent_services.delete_agent(db = db, tenant_id = tenant.tenant_id, agent_id = agent_id)
+    if not deleted:
+        raise HTTPException(status_code = 404, detail = "Agent not found")

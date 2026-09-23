@@ -8,11 +8,7 @@ from backend.app.config import WORKSPACE
 class Logger:
     def __init__(self, log_file: str = f"{WORKSPACE}/backend/log/log.txt"):
         self.log_path = Path(log_file)
-        
         self.log_path.parent.mkdir(parents=True, exist_ok=True)
-        self.log_path.touch(exist_ok=True)
-        print(f"Under touch {self.log_path}")
-        
         self.LEVEL = ["INFO", "ERROR", "DEBUG", "WARNING"]
         self.start = 0
         self.end = 0

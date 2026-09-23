@@ -4,8 +4,8 @@ from backend.app.rag.embeddings import embed_texts
 
 
 def get_collection():
-    client = PersistentClient(path=VECTOR_DB_PATH)
-    return client.get_or_create_collection(name=COLLECTION_NAME)
+    client = PersistentClient(path = VECTOR_DB_PATH)
+    return client.get_or_create_collection(name = COLLECTION_NAME, metadata = {"hnsw:space": "cosine"})
 
 
 def store_chunks(tenant_id: str, agent_id: str, source_id: str, chunks: list[dict]) -> int:
@@ -28,3 +28,8 @@ def store_chunks(tenant_id: str, agent_id: str, source_id: str, chunks: list[dic
     embeddings = embed_texts(texts)
     collection.add(ids=ids, embeddings=embeddings, metadatas=metadatas, documents=texts)
     return len(chunks)
+
+# Agent Deletion inspired by the other Intern's implementation 
+def delete_agent_vectors(tenant_id : str, agent_id: str) -> None:
+    collection = get_collection()
+    collection.delete(where = {"$and": [{"tenant_id": tenant_id, "agent_id": agent_id}]})

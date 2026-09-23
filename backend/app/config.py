@@ -33,6 +33,7 @@ TEMPERATURE = 0.3
 REASONING_EFFOR = ["minimal", "low", "medium"]
 TOP_P = 0.9
 TOP_K = 0
+SIMILARITY_THRESHOLD = 0.0 # Place holder will figure out a sweet spot later after tests
 
 CHUNK_SIZE = 500
 OVERLAP = 50
