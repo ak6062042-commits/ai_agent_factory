@@ -32,7 +32,7 @@ def create_tenant(db: Session, payload: TenantRequest):
         api_key = api_key, 
     )
 
-# ================================================== THIS IS FOR ME DO NOT LOOK BEYOND IT WILL DELETE LATE ================================================== 
+# ================================================== THIS IS FOR ME DO NOT LOOK BEYOND IT WILL DELETE LATER ================================================== 
 
 # To be NOTED tenant schema was this why a hashed key instead of the raw one
 # class TenantResposne(BaseModel):

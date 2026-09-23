@@ -9,6 +9,7 @@ from backend.app.db.models import Tenant
 from backend.app.db import repositories
 from backend.app.schemas.agent import AgentResponse
 from backend.app.services import agent_services
+from pydantic import AnyHttpUrl, ValidationError
 
 router = APIRouter(prefix="/agents", tags=["agents"])
 
@@ -17,7 +18,17 @@ router = APIRouter(prefix="/agents", tags=["agents"])
 def create_agent(background_tasks: BackgroundTasks, agent_name: str = Form(...), website_url: str = Form(...), documents: List[UploadFile] = File(...), db: Session = Depends(get_db), tenant: Tenant = Depends(get_current_tenant),):
     if len(documents) > MAX_UPLOADS:
         raise HTTPException(status_code=400, detail=f"Too many files: max {MAX_UPLOADS}, got {len(documents)}")
-    return agent_services.create_agent(db, tenant, agent_name, website_url, documents, background_tasks)
+    agent_name = agent_name.strip()
+    if not agent_name:
+        raise HTTPException(status_code = 422, detail = "agent_name must not be empty")
+    try:
+        validate_url = str(AnyHttpUrl(website_url))
+    except ValidationError as e:
+        # I should probably log here
+        raise HTTPException(status_code = 422, detail = "website url must be a valid http/https URL")
+        
+    
+    return agent_services.create_agent(db, tenant, agent_name, validate_url, documents, background_tasks)
 
 
 @router.get("", response_model=list[AgentResponse])

@@ -23,12 +23,9 @@ def create_agent(db: Session, tenant: Tenant, agent_name: str, website_url: str,
         file_path = save_upload(tenant.tenant_id, agent.agent_id, doc)
         repositories.create_source(db, tenant_id = tenant.tenant_id, agent_id = agent.agent_id, source_type = SourceType.DOCUMENT, title = doc.filename, url = None, file_path = file_path)
         
-        last_source = agent.sources[-1] if agent.sources else None
-
     repositories.create_source(db, tenant_id = tenant.tenant_id, agent_id = agent.agent_id, source_type = SourceType.WEBSITE, title = website_url, url = website_url,)
     db.commit()
     db.refresh(agent)
-
     background_tasks.add_task(run_ingestion, agent.agent_id)
 
     return AgentResponse.model_validate(agent)
