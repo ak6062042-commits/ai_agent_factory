@@ -22,3 +22,4 @@ class Citation(BaseModel):
 class ChatResponse(BaseModel):
     answer: str
     sources: list[Citation] = Field(default_factory = list)
+    session_id: str

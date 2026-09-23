@@ -2,7 +2,7 @@ from backend.app.ingestion.pipeline import process_source
 from backend.app.core.enums import IngestionStatus
 from backend.app.db.database import get_session
 from backend.app.db import repositories
-
+from backend.app.services.prompt_services import generate_and_store_prompt
 
 def run_ingestion(agent_id: str) -> None:
     with get_session() as session:
@@ -24,7 +24,7 @@ def run_ingestion(agent_id: str) -> None:
 
         if any_success:
             agent.ingestion_status = IngestionStatus.READY
-            agent.system_prompt = _build_placeholder_prompt(agent)
+            generate_and_store_prompt(db = session, agent = agent)
         else:
             agent.ingestion_status = IngestionStatus.FAILED
             agent.failure_reason = "All sources failed to ingest"

@@ -13,7 +13,7 @@ def retrieve(tenant_id: str, agent_id: str, query: str, top_k: int = 5, max_dist
     results = collection.query(query_embeddings = [query_embedding], n_results = top_k,where = {"$and": [{"tenant_id": tenant_id}, {"agent_id": agent_id}]},)
     unpacked = _unpack(results)
     
-    return [r for r in unpacked if unpacked["score"] <= max_distance] 
+    return [r for r in unpacked if r["score"] <= max_distance] 
     
 
 

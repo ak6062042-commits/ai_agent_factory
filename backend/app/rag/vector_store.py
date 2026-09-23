@@ -1,10 +1,11 @@
 from chromadb import PersistentClient
 from backend.app.config import VECTOR_DB_PATH, COLLECTION_NAME
 from backend.app.rag.embeddings import embed_texts
+from chromadb.config import Settings
 
 
 def get_collection():
-    client = PersistentClient(path = VECTOR_DB_PATH)
+    client = PersistentClient(path = VECTOR_DB_PATH, settings=Settings(anonymized_telemetry=False))
     return client.get_or_create_collection(name = COLLECTION_NAME, metadata = {"hnsw:space": "cosine"})
 
 

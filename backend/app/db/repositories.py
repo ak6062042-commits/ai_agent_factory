@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from backend.app.db.models import Agent, Source
 from backend.app.core.enums import SourceType
 from backend.log.logger import Logger
+from backend.app.db.models import Conversation, Message
+from backend.app.core.enums import Roles
 
 logger = Logger()
 
@@ -61,3 +63,49 @@ def delete_agent(db: Session, tenant_id: str, agent_id: str):
     db.delete(agent)
     logger.log(F"Agent with the provided agent_id: ({agent_id}) deleted", "INFO")
     return True
+
+
+def get_or_create_conversation(db: Session, tenant_id: str, agent_id: str, session_id: str) -> Conversation:
+    convo = (
+        db.query(Conversation)
+        .filter(
+            Conversation.tenant_id == tenant_id,
+            Conversation.agent_id == agent_id,
+            Conversation.session_id == session_id,
+        )
+        .first()
+    )
+    if convo:
+        return convo
+
+    convo = Conversation(tenant_id=tenant_id, agent_id=agent_id, session_id=session_id)
+    db.add(convo)
+    db.flush()
+    return convo
+
+
+def get_recent_messages(db: Session, tenant_id: str, agent_id: str, conversation_id: str, limit: int = 10) -> list[Message]:
+    messages = (
+        db.query(Message)
+        .filter(
+            Message.tenant_id == tenant_id,
+            Message.agent_id == agent_id,
+            Message.conversation_id == conversation_id,
+        )
+        .order_by(Message.created_at.desc())
+        .limit(limit)
+        .all()
+    )
+    return list(reversed(messages))  
+
+
+def create_message(db: Session, tenant_id: str, agent_id: str, conversation_id: str, role: Roles, content: str, citation=None) -> Message:
+    message = Message(
+        tenant_id=tenant_id, agent_id=agent_id, conversation_id=conversation_id,
+        role=role, content=content, citation=citation,
+    )
+    db.add(message)
+    db.flush()
+    return message
+def get_source_by_id(db: Session, tenant_id: str, agent_id: str, source_id: str):
+    return db.query(Source).filter(Source.tenant_id == tenant_id, Source.agent_id == agent_id, Source.source_id == source_id).first()

@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from backend.app.api import tenants, agents
+from backend.app.api import tenants, agents, chat
 from backend.app.db.database import init_db
 from backend.app.core.security import get_current_tenant
 from backend.app.db.models import Tenant
@@ -24,13 +24,7 @@ app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_credentials=False,
 
 app.include_router(tenants.router)
 app.include_router(agents.router)
-
-# @app.get ("/whoami")
-# def whoami(tenant: Tenant = Depends(get_current_tenant)):
-#     return{
-#         "tenant_id": tenant.tenant_id,
-#         "organization": tenant.organization_name
-#     }  add a feature like this
+app.include_router(chat.router)
 
 @app.get('/')
 def root() -> dict:

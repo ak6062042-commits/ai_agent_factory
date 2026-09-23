@@ -19,7 +19,7 @@ def save_upload(tenant_id: str, agent_id: str, uploaded_file: UploadFile):
     with open(file_path, "wb") as out:
         out.write(uploaded_file.file.read())
     
-    return str
+    return str(file_path)
 
 def delete_agent_files(tenant_id: str, agent_id: str):
     agent_dir = Path(UPLOAD_ROOT / tenant_id / agent_id)
