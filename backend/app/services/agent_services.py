@@ -2,6 +2,7 @@ from typing import List, Optional
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
 
+from backend.app.db.models import Source
 from backend.app.core.enums import SourceType
 from backend.app.db import repositories
 from backend.app.schemas.agent import AgentResponse
