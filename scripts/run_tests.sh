@@ -8,12 +8,11 @@
 set -uo pipefail
 
 # --- Logging setup ---------------------------------------------------------
-# Writes everything this script prints to scripts/test_results.txt (relative
-# to this script's own location) AND still shows it live in the terminal.
+# Writes everything this script prints to test_results.txt, in the SAME
+# directory as this script (so if you keep this in a scripts/ folder, the
+# log lands there too — no nested scripts/scripts/).
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LOG_DIR="$SCRIPT_DIR/scripts"
-mkdir -p "$LOG_DIR"
-LOG_FILE="$LOG_DIR/../test_results.txt"
+LOG_FILE="$SCRIPT_DIR/test_results.txt"
 
 if [ -z "${TEST_LOGGING_ACTIVE:-}" ]; then
   export TEST_LOGGING_ACTIVE=1
@@ -180,12 +179,42 @@ if [ "$NSOURCES" -gt 0 ] 2>/dev/null; then pass "citations present ($NSOURCES)";
 echo "  answer: $ANSWER"
 
 echo ""
-echo "=== 12. Chat: follow-up in same session (history check) ==="
+echo "=== 12. Chat: follow-up in same session (history-aware retrieval check) ==="
 RESP=$(curl -s -X POST "$BASE/agents/$AGENT_ID/chat" \
   -H "X-API-Key: $API_KEY" -H "Content-Type: application/json" \
   -d '{"message": "Can you summarize what you just told me?", "session_id": "test-session-1"}')
-echo "  answer: $(echo "$RESP" | jq -r '.answer')"
-echo "  MANUALLY VERIFY this is a coherent follow-up, not a generic/context-free answer"
+ANSWER=$(echo "$RESP" | jq -r '.answer')
+echo "  answer: $ANSWER"
+if [[ "$ANSWER" == *"cannot find"* ]]; then
+  fail "follow-up was incorrectly refused (history-aware retrieval fix not working)"
+else
+  pass "follow-up was NOT refused (got a real answer)"
+  echo "  MANUALLY VERIFY the answer above actually summarizes the prior turn, not just any PPO fact"
+fi
+
+echo ""
+echo "=== 12b. Chat: greeting / small talk (should not be refused, no citations needed) ==="
+RESP=$(curl -s -X POST "$BASE/agents/$AGENT_ID/chat" \
+  -H "X-API-Key: $API_KEY" -H "Content-Type: application/json" \
+  -d '{"message": "hi", "session_id": "test-session-greet"}')
+ANSWER=$(echo "$RESP" | jq -r '.answer')
+echo "  answer: $ANSWER"
+if [[ "$ANSWER" == *"cannot find"* ]]; then
+  fail "greeting was incorrectly refused (small-talk bypass not working)"
+else
+  pass "greeting handled conversationally, not refused"
+fi
+
+RESP=$(curl -s -X POST "$BASE/agents/$AGENT_ID/chat" \
+  -H "X-API-Key: $API_KEY" -H "Content-Type: application/json" \
+  -d '{"message": "thanks!", "session_id": "test-session-greet"}')
+ANSWER=$(echo "$RESP" | jq -r '.answer')
+echo "  answer: $ANSWER"
+if [[ "$ANSWER" == *"cannot find"* ]]; then
+  fail "'thanks!' was incorrectly refused (small-talk bypass not working)"
+else
+  pass "'thanks!' handled conversationally, not refused"
+fi
 
 echo ""
 echo "=== 13. Chat: irrelevant question (grounding/refusal check) ==="
