@@ -68,7 +68,7 @@ def _fetch_with_requests(url: str) -> list[dict]:
     return [{"text": text, "url": url, "title": title}]
 
 
-def fetch_website_content(url: str, use_exa: bool = True, discover_similar: bool = False) -> list[dict]:
+def fetch_website_content(url: str, use_exa: bool = True, discover_similar: bool = True) -> list[dict]:
     if not _is_safe_url(url):
         raise WebsiteFetchError(f"Refusing to fetch unsafe URL: {url}")
 
