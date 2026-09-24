@@ -3,7 +3,6 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
-LOG_FILE="$PROJECT_ROOT/tests/test_log.txt"
 
 if [ -x "$PROJECT_ROOT/.venv/bin/python" ]; then
     PYTHON_BIN="$PROJECT_ROOT/.venv/bin/python"
@@ -13,10 +12,5 @@ else
     PYTHON_BIN="python"
 fi
 
-mkdir -p "$PROJECT_ROOT/tests"
 cd "$PROJECT_ROOT"
-set +e
-"$PYTHON_BIN" -m pytest tests -v -p no:cacheprovider 2>&1 | tee "$LOG_FILE"
-TEST_STATUS=${PIPESTATUS[0]}
-set -e
-exit "$TEST_STATUS"
+exec "$PYTHON_BIN" -m http.server 8080 --directory frontend

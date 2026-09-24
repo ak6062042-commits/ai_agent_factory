@@ -43,6 +43,7 @@ backend/data/*.sqlite3
 # Logs
 # ==============================
 *.log
+tests/test_log.txt
 backend/log/log.txt
 
 # ==============================
