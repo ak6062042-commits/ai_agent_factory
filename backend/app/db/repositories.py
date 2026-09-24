@@ -109,3 +109,12 @@ def create_message(db: Session, tenant_id: str, agent_id: str, conversation_id: 
     return message
 def get_source_by_id(db: Session, tenant_id: str, agent_id: str, source_id: str):
     return db.query(Source).filter(Source.tenant_id == tenant_id, Source.agent_id == agent_id, Source.source_id == source_id).first()
+
+def delete_source(db: Session, tenant_id: str, agent_id: str, source_id: str):
+    source = get_source_by_id(db, tenant_id = tenant_id, agent_id = agent_id, source_id = source_id)
+    
+    if not source:
+        return False
+    
+    db.delete(source)
+    return True

@@ -3,6 +3,7 @@ from fastapi import UploadFile
 from backend.app.config import DATA_DIR
 from backend.log.logger import Logger
 import shutil
+from typing import Optional
 
 UPLOAD_ROOT = DATA_DIR / "uploads"
 logger = Logger()
@@ -25,3 +26,11 @@ def delete_agent_files(tenant_id: str, agent_id: str):
     agent_dir = Path(UPLOAD_ROOT / tenant_id / agent_id)
     if agent_dir.exists():
         shutil.rmtree(agent_dir)
+
+def delete_source_file(file_path: Optional[str]):
+    if not file_path:
+        return
+    
+    path = Path(file_path)
+    if path.exists():
+        path.unlink()

@@ -29,3 +29,7 @@ class AgentResponse(BaseModel):
     ingestion_status: IngestionStatus
     created_at: Optional[datetime] = None
     failure_reason: Optional[str] =  None
+    
+class AddSourceRequest(BaseModel):
+    model_cofig = ConfigDict(str_strip_whitespace = True)
+    website_url: Optional[AnyHttpUrl] = None

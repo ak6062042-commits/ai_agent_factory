@@ -33,4 +33,8 @@ def store_chunks(tenant_id: str, agent_id: str, source_id: str, chunks: list[dic
 # Agent Deletion inspired by the other Intern's implementation 
 def delete_agent_vectors(tenant_id : str, agent_id: str) -> None:
     collection = get_collection()
-    collection.delete(where = {"$and": [{"tenant_id": tenant_id, "agent_id": agent_id}]})
+    collection.delete(where = {"$and": [{"tenant_id": tenant_id}, {"agent_id": agent_id}]})
+    
+def delete_source_vectors(tenant_id : str, agent_id: str, source_id: str):
+    collection = get_collection()
+    collection.delete(where = {"$and": [{"tenant_id": tenant_id}, {"agent_id": agent_id}, {"source_id": source_id}]})
