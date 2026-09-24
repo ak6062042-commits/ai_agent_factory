@@ -1,9 +1,33 @@
 from backend.app.llm.client import LLMClient
 from backend.app.rag.retriver import retrieve
 
+_GREETING_PATTERNS = {
+    "hi", "hello", "hey", "hi there", "hello there", "yo",
+    "thanks", "thank you", "thanks!", "thank you!",
+    "ok", "okay", "cool", "great", "nice", "got it",
+    "bye", "goodbye", "see you",
+}
+
+
+def _is_smalltalk(message: str) -> bool:
+    normalized = message.strip().lower().rstrip("!.?")
+    return normalized in _GREETING_PATTERNS
+
 
 def build_answer(tenant_id: str, agent_id: str, system_prompt: str, conversation_history: str, question: str) -> tuple[str, list[dict]]:
-    retrieved = retrieve(tenant_id, agent_id, question, top_k=5)  # used SIMILARITY_THRESHOLD = 0.65 default
+    if _is_smalltalk(question):
+        messages = [{"role": "system", "content": system_prompt}]
+        if conversation_history:
+            messages.append({"role": "system", "content": f"Recent conversation:\n{conversation_history}"})
+        messages.append({"role": "user", "content": question})
+        answer = LLMClient().generate(messages)
+        return answer, []
+
+    retrieval_query = question
+    if conversation_history:
+        retrieval_query = f"{conversation_history}\nUSER: {question}"
+
+    retrieved = retrieve(tenant_id, agent_id, retrieval_query, top_k=5)
 
     if not retrieved:
         return (
@@ -23,10 +47,6 @@ def build_answer(tenant_id: str, agent_id: str, system_prompt: str, conversation
     citations = [
         {"source_id": r["source_id"], "page": r.get("page")}
         for r in retrieved
+        if r.get("source_id") 
     ]
     return answer, citations
-
-# SERIOUS NOTE: """citations here returns source_id, not the full title/source_type/url your 
-# Citation schema needs — that mapping (source_id → title/type/url) requires a Source lookup, 
-# which belongs in chat_services.py since it's DB-aware and responder.py deliberately isn't 
-# (keeps this file able to be tested/reasoned about without a DB session)."""

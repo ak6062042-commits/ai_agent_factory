@@ -1,0 +1,75 @@
+=== Test run started: 2026-09-24 06:07:55 ===
+Logging to: /home/muhammad-anas-khan/Desktop/ai_agent_factory/scripts/scripts/../test_results.txt
+
+=== 1. Create tenant ===
+  PASS: create tenant (got 201)
+  api_key=tsk_6CZrBDSNIhXTZcBeNPeeIjcdGp3d-Xmp5QW_QYvwuPE
+  tenant_id=dc08da02-fb3e-4276-8f63-89d08a535113
+
+=== 2. Duplicate email rejected ===
+  PASS: duplicate email rejected (got 409)
+
+=== 3. Create agent (valid) ===
+  PASS: create agent (got 201)
+  agent_id=8cdcbc81-7612-4236-a22c-40ab1c1fcfee
+
+=== 4. Reject blank agent_name ===
+  PASS: blank agent_name rejected (got 422)
+
+=== 5. Reject invalid website_url ===
+  PASS: invalid website_url rejected (got 422)
+
+=== 6. Wait for ingestion (20s) ===
+  PASS: ingestion reached ready
+  PASS: indexed_chunk_count > 0 (31)
+  system_prompt: You are a hybrid AI assistant combining the conversational fluency of top-tier chat models with absolute factual precision. 
+Base your answers strictly on the provided context. 
+If the answer cannot be found in the context, say 'I cannot find that in the provided information'—do not extrapolate or assume.
+Keep your tone engaging, clear, and direct.
+
+You are test_agent_1. Your knowledge base covers: The knowledge base primarily covers advanced topics in reinforcement learning (RL), focusing on algorithms such as Proximal Policy Optimization (PPO) and its predecessor, Trust Region Policy Optimization (TRPO). It includes detailed explanations of the algorithms, their historical context, implementation details, and comparisons regarding computational efficiency and stability. Additionally, the knowledge base addresses the application of these algorithms in various domains, such as robotics and gaming, and discusses related technologies like Nvidia's Deep Learning Super Sampling (DLSS) for image enhancement in video games.
+Only answer using the context provided to you for each question.
+  PASS: system_prompt looks generated (manually verify it's actually about PPO/RL)
+
+=== 7. Tenant isolation ===
+  PASS: tenant B cannot see tenant A's agent (got 404)
+
+=== 8. Add source ===
+  PASS: add source (got 201)
+  waiting 15s for source ingestion...
+  PASS: indexed_chunk_count increased after adding source (31 -> 66)
+  NOTE: source_id not found in AgentSource response (schema may omit it) - skipping source delete test
+
+=== 9. Reject empty add-source request ===
+  PASS: empty add-source rejected (got 400)
+
+=== 11. Chat: relevant question ===
+  PASS: chat relevant question (got 200)
+  PASS: session_id echoed correctly
+  PASS: citations present (1)
+  answer: Proximal Policy Optimization (PPO) is a reinforcement learning (RL) algorithm used for training an intelligent agent. It is a policy gradient method, particularly suited for deep RL when the policy network is large. PPO was published in 2017 as an approximation of its predecessor, Trust Region Policy Optimization (TRPO), which used a more complex method involving the Hessian matrix to enforce trust region constraints. In contrast, PPO simplifies this by using a clipping mechanism to approximate the KL divergence constraint, making it easier to implement and requiring less computational resources. PPO has been widely applied in various domains, including robotics and gaming.
+
+=== 12. Chat: follow-up in same session (history check) ===
+  answer: Proximal Policy Optimization (PPO) is a reinforcement learning algorithm designed for training intelligent agents, particularly effective in deep reinforcement learning with large policy networks. It was introduced in 2017 as a simpler approximation of its predecessor, Trust Region Policy Optimization (TRPO), which used complex Hessian matrix computations. PPO employs a clipping mechanism to manage policy updates, making it easier to implement and more computationally efficient.
+
+PPO has been widely adopted, becoming the default algorithm at OpenAI since 2018, and has applications in various fields, including robotics and gaming. It is known for its stability, requiring less hyperparameter tuning compared to other algorithms, and achieving good sample efficiency by reusing training data. The algorithm focuses on maximizing cumulative rewards through policy gradient methods while ensuring that updates do not deviate too far from previous policies.
+  MANUALLY VERIFY this is a coherent follow-up, not a generic/context-free answer
+
+=== 13. Chat: irrelevant question (grounding/refusal check) ===
+  answer: I cannot find that in the provided information.
+  FAIL: irrelevant question was NOT refused as expected
+
+=== 14. Chat against a not-ready agent (409 check) ===
+  PASS: chat on not-ready agent returns 409 (got 409)
+
+=== 15. Delete agent ===
+  PASS: delete agent (got 204)
+  PASS: GET deleted agent returns 404 (got 404)
+  PASS: double-delete returns 404, not 204 (got 404)
+
+==================================
+RESULTS: 19 passed, 1 failed
+Finished: 2026-09-24 06:08:40
+Log written to: /home/muhammad-anas-khan/Desktop/ai_agent_factory/scripts/scripts/../test_results.txt
+==================================
+{"detail":"Invalid Api key"}

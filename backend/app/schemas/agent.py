@@ -31,5 +31,5 @@ class AgentResponse(BaseModel):
     failure_reason: Optional[str] =  None
     
 class AddSourceRequest(BaseModel):
-    model_cofig = ConfigDict(str_strip_whitespace = True)
+    model_config = ConfigDict(str_strip_whitespace = True)
     website_url: Optional[AnyHttpUrl] = None

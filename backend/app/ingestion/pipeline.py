@@ -10,12 +10,15 @@ def ingest_source(source, tenant_id: str, agent_id: str) -> int:
 
     if source.source_type == SourceType.WEBSITE:
         pages = fetch_website_content(source.url, use_exa=True, discover_similar=False)
-        for web_page_index, web_page in enumerate(pages):
+        chunk_offset = 0
+        for web_page in pages:
             chunks = chunk_text_simple(web_page["text"])
             if not chunks:
                 continue
-            web_source_id = f"{source.source_id}_web_{web_page_index}"
-            total_chunks += store_chunks(tenant_id, agent_id, web_source_id, chunks)
+            for c in chunks:
+                c["chunk_index"] += chunk_offset
+            total_chunks += store_chunks(tenant_id, agent_id, source.source_id, chunks)
+            chunk_offset += len(chunks)
     else:
         pages = parse_document(source.file_path)
         if not pages:

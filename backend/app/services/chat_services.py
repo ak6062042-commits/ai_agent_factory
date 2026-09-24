@@ -5,6 +5,9 @@ from backend.app.core.enums import Roles
 from backend.app.llm.responder import build_answer
 from backend.app.rag.history import History
 from backend.app.schemas.chat import ChatResponse, Citation
+from backend.log.logger import Logger
+
+logger = Logger()
 
 _history = History()  # module-level singleton; in-memory
 
@@ -40,6 +43,7 @@ def handle_chat(db: Session, tenant_id: str, agent, session_id: str, message: st
 
 
 def _resolve_citations(db: Session, tenant_id: str, agent_id: str, raw_citations: list[dict]) -> list[Citation]:
+    print(f"DEBUG print raw citations: {raw_citations}")
     citations = []
     seen_source_ids = set()
     for rc in raw_citations:

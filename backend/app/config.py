@@ -35,7 +35,7 @@ TOP_P = 0.9
 TOP_K = 0
 SIMILARITY_THRESHOLD = 0.65 # Place holder will figure out a sweet spot later after tests (is done not a place holder anymore)
 
-KEEP_CHAT_SESSION = 10
+KEEP_CHAT_SESSIONS = 10
 CHUNK_SIZE = 500
 OVERLAP = 50
 VECTOR_DB_PATH = str(DATA_DIR / "chroma")
