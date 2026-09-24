@@ -1,17 +1,17 @@
-=== Test run started: 2026-09-24 06:07:55 ===
-Logging to: /home/muhammad-anas-khan/Desktop/ai_agent_factory/scripts/scripts/../test_results.txt
+=== Test run started: 2026-09-24 06:57:04 ===
+Logging to: /home/muhammad-anas-khan/Desktop/ai_agent_factory/scripts/test_results.txt
 
 === 1. Create tenant ===
   PASS: create tenant (got 201)
-  api_key=tsk_6CZrBDSNIhXTZcBeNPeeIjcdGp3d-Xmp5QW_QYvwuPE
-  tenant_id=dc08da02-fb3e-4276-8f63-89d08a535113
+  api_key=tsk_JS3ZbkDqMXM42dDnXmtcHRW1TQGxYOnePeSEmKkEqBE
+  tenant_id=a9fa4e25-4ec7-4251-9946-16d372c42b42
 
 === 2. Duplicate email rejected ===
   PASS: duplicate email rejected (got 409)
 
 === 3. Create agent (valid) ===
   PASS: create agent (got 201)
-  agent_id=8cdcbc81-7612-4236-a22c-40ab1c1fcfee
+  agent_id=ab82e864-ffdb-4461-8204-8426e09820e0
 
 === 4. Reject blank agent_name ===
   PASS: blank agent_name rejected (got 422)
@@ -27,7 +27,7 @@ Base your answers strictly on the provided context.
 If the answer cannot be found in the context, say 'I cannot find that in the provided information'—do not extrapolate or assume.
 Keep your tone engaging, clear, and direct.
 
-You are test_agent_1. Your knowledge base covers: The knowledge base primarily covers advanced topics in reinforcement learning (RL), focusing on algorithms such as Proximal Policy Optimization (PPO) and its predecessor, Trust Region Policy Optimization (TRPO). It includes detailed explanations of the algorithms, their historical context, implementation details, and comparisons regarding computational efficiency and stability. Additionally, the knowledge base addresses the application of these algorithms in various domains, such as robotics and gaming, and discusses related technologies like Nvidia's Deep Learning Super Sampling (DLSS) for image enhancement in video games.
+You are test_agent_1. Your knowledge base covers: This knowledge base encompasses topics related to reinforcement learning (RL), specifically focusing on Proximal Policy Optimization (PPO) and its predecessor, Trust Region Policy Optimization (TRPO). It includes detailed explanations of algorithmic principles, performance characteristics, and applications in various domains such as robotics and gaming. Additionally, the knowledge base addresses the integration of deep learning technologies in graphics, particularly Nvidia's Deep Learning Super Sampling (DLSS) technology, which enhances image quality and performance in video games. The content spans algorithmic theory, practical implementations, and community feedback on advancements in both RL methods and image processing technologies.
 Only answer using the context provided to you for each question.
   PASS: system_prompt looks generated (manually verify it's actually about PPO/RL)
 
@@ -47,17 +47,24 @@ Only answer using the context provided to you for each question.
   PASS: chat relevant question (got 200)
   PASS: session_id echoed correctly
   PASS: citations present (1)
-  answer: Proximal Policy Optimization (PPO) is a reinforcement learning (RL) algorithm used for training an intelligent agent. It is a policy gradient method, particularly suited for deep RL when the policy network is large. PPO was published in 2017 as an approximation of its predecessor, Trust Region Policy Optimization (TRPO), which used a more complex method involving the Hessian matrix to enforce trust region constraints. In contrast, PPO simplifies this by using a clipping mechanism to approximate the KL divergence constraint, making it easier to implement and requiring less computational resources. PPO has been widely applied in various domains, including robotics and gaming.
+  answer: Proximal Policy Optimization (PPO) is a reinforcement learning (RL) algorithm designed for training intelligent agents. It is a policy gradient method commonly used in deep RL, particularly when the policy network is large. PPO was published in 2017 as an approximation of its predecessor, Trust Region Policy Optimization (TRPO), which addressed instability issues in other algorithms by using a trust region method. Unlike TRPO, which requires computing the Hessian matrix for enforcing constraints, PPO simplifies this by using a clipping mechanism to approximate the KL divergence constraint. This makes PPO easier to implement and more computationally efficient, allowing it to be applied effectively in various domains, such as robotics and gaming.
 
-=== 12. Chat: follow-up in same session (history check) ===
-  answer: Proximal Policy Optimization (PPO) is a reinforcement learning algorithm designed for training intelligent agents, particularly effective in deep reinforcement learning with large policy networks. It was introduced in 2017 as a simpler approximation of its predecessor, Trust Region Policy Optimization (TRPO), which used complex Hessian matrix computations. PPO employs a clipping mechanism to manage policy updates, making it easier to implement and more computationally efficient.
+=== 12. Chat: follow-up in same session (history-aware retrieval check) ===
+  answer: Proximal Policy Optimization (PPO) is a reinforcement learning algorithm used for training intelligent agents, particularly in deep reinforcement learning with large policy networks. It was introduced in 2017 as an approximation of its predecessor, Trust Region Policy Optimization (TRPO), which was published in 2015. PPO simplifies TRPO's approach by using a clipping mechanism for policy updates instead of the computationally intensive Hessian matrix, making it easier to implement and more efficient for large-scale problems.
 
-PPO has been widely adopted, becoming the default algorithm at OpenAI since 2018, and has applications in various fields, including robotics and gaming. It is known for its stability, requiring less hyperparameter tuning compared to other algorithms, and achieving good sample efficiency by reusing training data. The algorithm focuses on maximizing cumulative rewards through policy gradient methods while ensuring that updates do not deviate too far from previous policies.
-  MANUALLY VERIFY this is a coherent follow-up, not a generic/context-free answer
+PPO has become the default RL algorithm at OpenAI since 2018 and has been successfully applied in various domains, including robotics and gaming. It is known for its stability, requiring less hyperparameter tuning compared to other algorithms, and for its sample efficiency, which allows it to effectively reuse training data. The algorithm uses a surrogate objective to ensure that policy updates do not stray too far from previous policies, enhancing its performance and reliability.
+  PASS: follow-up was NOT refused (got a real answer)
+  MANUALLY VERIFY the answer above actually summarizes the prior turn, not just any PPO fact
+
+=== 12b. Chat: greeting / small talk (should not be refused, no citations needed) ===
+  answer: Hi there! How's it going?
+  PASS: greeting handled conversationally, not refused
+  answer: You're welcome! If you need anything else, just let me know!
+  PASS: 'thanks!' handled conversationally, not refused
 
 === 13. Chat: irrelevant question (grounding/refusal check) ===
   answer: I cannot find that in the provided information.
-  FAIL: irrelevant question was NOT refused as expected
+  PASS: irrelevant question correctly refused (grounding held, regardless of citation mechanism)
 
 === 14. Chat against a not-ready agent (409 check) ===
   PASS: chat on not-ready agent returns 409 (got 409)
@@ -68,8 +75,7 @@ PPO has been widely adopted, becoming the default algorithm at OpenAI since 2018
   PASS: double-delete returns 404, not 204 (got 404)
 
 ==================================
-RESULTS: 19 passed, 1 failed
-Finished: 2026-09-24 06:08:40
-Log written to: /home/muhammad-anas-khan/Desktop/ai_agent_factory/scripts/scripts/../test_results.txt
+RESULTS: 23 passed, 0 failed
+Finished: 2026-09-24 06:57:53
+Log written to: /home/muhammad-anas-khan/Desktop/ai_agent_factory/scripts/test_results.txt
 ==================================
-{"detail":"Invalid Api key"}

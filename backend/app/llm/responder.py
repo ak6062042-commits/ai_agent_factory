@@ -8,6 +8,11 @@ _GREETING_PATTERNS = {
     "bye", "goodbye", "see you",
 }
 
+_SMALLTALK_SYSTEM_PROMPT = (
+    "You are a friendly AI assistant for a knowledge-base agent. "
+    "Respond briefly and naturally to greetings, thanks, and casual remarks. "
+    "This is not a knowledge question, so do not mention context or knowledge base limitations here."
+)
 
 def _is_smalltalk(message: str) -> bool:
     normalized = message.strip().lower().rstrip("!.?")
@@ -16,24 +21,21 @@ def _is_smalltalk(message: str) -> bool:
 
 def build_answer(tenant_id: str, agent_id: str, system_prompt: str, conversation_history: str, question: str) -> tuple[str, list[dict]]:
     if _is_smalltalk(question):
-        messages = [{"role": "system", "content": system_prompt}]
+        messages = [{"role": "system", "content": _SMALLTALK_SYSTEM_PROMPT}]
         if conversation_history:
             messages.append({"role": "system", "content": f"Recent conversation:\n{conversation_history}"})
         messages.append({"role": "user", "content": question})
         answer = LLMClient().generate(messages)
         return answer, []
 
-    retrieval_query = question
-    if conversation_history:
-        retrieval_query = f"{conversation_history}\nUSER: {question}"
+    retrieved = retrieve(tenant_id, agent_id, question, top_k=5)
 
-    retrieved = retrieve(tenant_id, agent_id, retrieval_query, top_k=5)
+    if not retrieved and conversation_history:
+        augmented_query = f"{conversation_history}\nUSER: {question}"
+        retrieved = retrieve(tenant_id, agent_id, augmented_query, top_k=5)
 
     if not retrieved:
-        return (
-            "I cannot find that in the provided information.",
-            [],
-        )
+        return ("I cannot find that in the provided information.", [])
 
     context_block = "\n---\n".join(r["text"] for r in retrieved)
 
@@ -47,6 +49,6 @@ def build_answer(tenant_id: str, agent_id: str, system_prompt: str, conversation
     citations = [
         {"source_id": r["source_id"], "page": r.get("page")}
         for r in retrieved
-        if r.get("source_id") 
+        if r.get("source_id")
     ]
     return answer, citations
