@@ -13,4 +13,4 @@ pymupdf>=1.24,<2
 exa-py>=1.8,<2
 requests>=2.32,<3
 beautifulsoup4>=4.12,<5
-python-docx>=1.1.<2
+python-docx>=1.1,<2

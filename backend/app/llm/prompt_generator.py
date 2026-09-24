@@ -16,7 +16,7 @@ def generate_system_prompt(tenant_id: str, agent_id: str, agent_name: str) -> st
     Falls back to a safe generic prompt if retrieval/generation fails or
     returns nothing (e.g. ingestion succeeded but content was extremely sparse).
     """
-    sample_chunks = retrieve(tenant_id, agent_id, _SAMPLE_QUERY, top_k=8, max_distance=999.9)
+    sample_chunks = retrieve(tenant_id, agent_id, _SAMPLE_QUERY, top_k=10, max_distance=999.9)
 
     if not sample_chunks:
         return _fallback_prompt(agent_name)

@@ -29,11 +29,11 @@ MASTER_KEY = getenv("MASTER_KEY")
 
 MAX_UPLOADS = 5
 MAX_TOKEN = 1500
-TEMPERATURE = 0.3
+TEMPERATURE = 0.72
 REASONING_EFFOR = ["minimal", "low", "medium"]
 TOP_P = 0.9
 TOP_K = 0
-SIMILARITY_THRESHOLD = 0.65 # Place holder will figure out a sweet spot later after tests (is done not a place holder anymore)
+SIMILARITY_THRESHOLD = 0.50 # Place holder will figure out a sweet spot later after tests (is done not a place holder anymore)
 
 KEEP_CHAT_SESSIONS = 10
 CHUNK_SIZE = 500

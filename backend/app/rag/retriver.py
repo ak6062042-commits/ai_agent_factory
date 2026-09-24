@@ -3,7 +3,7 @@ from backend.app.rag.embeddings import embed_text
 from backend.app.config import SIMILARITY_THRESHOLD
 
 # TODO: SIMILARITY THRESHOLD IS JUST A PLACE HOLDER IN config RIGHT figure out a good sweet spot after tests
-def retrieve(tenant_id: str, agent_id: str, query: str, top_k: int = 5, max_distance: float = SIMILARITY_THRESHOLD) -> list[dict]:
+def retrieve(tenant_id: str, agent_id: str, query: str, top_k: int = 10, max_distance: float = SIMILARITY_THRESHOLD) -> list[dict]:
     if not query or not query.strip():
         return []
 

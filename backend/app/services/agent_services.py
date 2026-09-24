@@ -49,7 +49,9 @@ def add_source(db: Session, tenant_id: str, agent_id: str, website_url: Optional
     if not agent:
         return None
 
-    if document is not None:
+    has_document = document is not None and bool(document.filename)
+
+    if has_document:
         file_path = save_upload(tenant_id, agent_id, document)
         source = repositories.create_source(
             db, tenant_id=tenant_id, agent_id=agent_id,
@@ -61,7 +63,7 @@ def add_source(db: Session, tenant_id: str, agent_id: str, website_url: Optional
             source_type=SourceType.WEBSITE, title=str(website_url), url=str(website_url), file_path=None
         )
     else:
-        return None  
+        return None
 
     db.commit()
     db.refresh(source)
@@ -71,7 +73,8 @@ def add_source(db: Session, tenant_id: str, agent_id: str, website_url: Optional
         agent.indexed_chunk_count += chunk_count
         db.commit()
     except Exception:
-        db.commit()  
+        db.commit()
+
     return source
 
 
