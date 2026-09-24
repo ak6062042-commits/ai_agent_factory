@@ -65,6 +65,7 @@ PPO has become the default RL algorithm at OpenAI since 2018 and has been succes
 === 13. Chat: irrelevant question (grounding/refusal check) ===
   answer: I cannot find that in the provided information.
   PASS: irrelevant question correctly refused (grounding held, regardless of citation mechanism)
+  `NOTE IS A FALIURE`
 
 === 14. Chat against a not-ready agent (409 check) ===
   PASS: chat on not-ready agent returns 409 (got 409)
