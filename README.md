@@ -134,4 +134,5 @@ tests/         Unit/API-contract tests, fixtures, and the opt-in live smoke test
 
 ## Notes
 
-The checked-in assignment brief asks for `/health`; the current implementation exposes its simple health-style response at `/`. See [operation notes](docs/operations.md) for this and other source-verified limitations, including process-local chat retrieval history and local SQLite/filesystem persistence.
+* The checked-in assignment brief asks for `/health`; the current implementation exposes its simple health-style response at `/`. See [operation notes](docs/operations.md) for this and other source-verified limitations, including process-local chat retrieval history and local SQLite/filesystem persistence.
+* **Local Testing & Configuration:** The `.env` template is currently undergoing a refactor to better support smooth localized testing (including upcoming toggles for `similarity_search` on/off and cleaner grouping for retrieval/model settings).
