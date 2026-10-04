@@ -2,7 +2,7 @@
 
 ## Supported sources
 
-Initial agent creation requires a website URL and documents. The parser currently supports PDF, DOCX, TXT, and CSV files. Documents are stored locally per tenant and agent before ingestion. A source added later can be a website or one document.
+Initial agent creation requires a website URL and documents. The parser currently supports PDF, MARKDOWN, DOCX, TXT, and CSV files. Documents are stored locally per tenant and agent before ingestion. A source added later can be a website or one document.
 
 Website fetching first rejects unsafe schemes, `localhost`, and private, loopback, or link-local literal IP addresses. When `EXA_API_KEY` is configured it tries Exa first; on failure it falls back to an HTTP request parsed with BeautifulSoup. The fallback uses a ten-second timeout and removes script, style, navigation, and footer content before extracting text.
 

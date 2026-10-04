@@ -8,7 +8,7 @@ This repository contains the backend, a static frontend, project documentation, 
 
 - Creates tenants and returns a one-time `tsk_` API key; only its SHA-256 hash is stored.
 - Scopes agent, source, conversation, message, and vector operations to the authenticated tenant.
-- Accepts PDF, DOCX, TXT, and CSV documents, plus website content.
+- Accepts PDF, MARKDOWN, DOCX, TXT, and CSV documents, plus website content.
 - Processes sources in the background, tracks `processing`, `ready`, and `failed` states, and generates a per-agent system prompt after successful ingestion.
 - Uses OpenAI embeddings with a Chroma vector store and a relevance threshold to ground answers.
 - Returns a fixed refusal when a knowledge question has no relevant retrieved content, while keeping greetings and brief acknowledgements conversational.
