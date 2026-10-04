@@ -42,7 +42,43 @@ def parse_text(file_path: str) -> list[dict]:
     return [{"text": text, "page": None}] if text else []
 
 # NOTE: text overlaps with the web content retrival as text format and implemented that as None for web content Will look over it to getting pass this  limitation
-        
+
+
+def parse_markdown(file_path: str) -> list[dict]:
+    with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+        content = f.read()
+
+    if not content.strip():
+        return []
+
+    sections = []
+    current_heading = None
+    current_lines = []
+
+    def flush_section():
+        if current_lines:
+            body = clean_text(" ".join(current_lines))
+            if body:
+                text = f"{current_heading}: {body}" if current_heading else body
+                sections.append({"text": text, "page": 1})
+
+    for line in content.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("#"):
+            flush_section()
+            current_heading = stripped.lstrip("#").strip()
+            current_lines = []
+        elif stripped:
+            current_lines.append(stripped)
+    flush_section()
+
+    if not sections:
+        text = clean_text(content)
+        if text:
+            sections.append({"text": text, "page": 1})
+
+    return sections
+
 
 def parse_csv(file_path: str) -> list[dict]:
     rows = []
@@ -71,6 +107,8 @@ def parse_document(file_path: str) -> list[dict]:
         return parse_text(file_path)
     elif suffix == ".csv":
         return parse_csv(file_path)
+    elif suffix in (".md", ".markdown"):
+        return parse_markdown(file_path)
     
     logger.log(f"Unsupported file type: {suffix}", "ERROR")
     raise ValueError(f"Unsupported file type: {suffix}")
